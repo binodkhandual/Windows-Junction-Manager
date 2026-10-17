@@ -153,10 +153,6 @@ Settings are preserved across application updates and portable moves.
 
 ## Automated Releases & Build Script
 
-### Why Isn't GitHub Releases Auto-Linked to the `dist` Folder?
-- **Git Files vs. GitHub Releases**: In Git, `dist/` is just a local folder on your disk. GitHub does **not** automatically link or copy repository folders into the GitHub **Releases** section.
-- **Dedicated Asset Hosting**: GitHub Releases is an independent service on GitHub designed to host downloadable binary assets without bloating repository git history. Releases are created via **Git Tags** (e.g. `v2.1.0`) or the **GitHub Releases API**.
-
 ### 🛠️ One-Click Release Builder (`build-release.bat`)
 We include a dedicated release automation script (`build-release.bat` for Windows and `build-release.sh` for Bash/WSL):
 
