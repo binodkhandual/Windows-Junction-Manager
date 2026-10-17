@@ -19,9 +19,11 @@
 
 <p align="center">
   <a href="#overview">Overview</a> •
+  <a href="#screenshots">Screenshots</a> •
   <a href="#key-features">Key Features</a> •
   <a href="#why-ntfs-junctions">Why NTFS Junctions?</a> •
   <a href="#installation--download">Installation</a> •
+  <a href="#automated-releases--build-script">Automated Releases</a> •
   <a href="#user-guide">User Guide</a> •
   <a href="#technical-architecture">Technical Architecture</a> •
   <a href="#building-from-source">Building from Source</a> •
@@ -39,6 +41,29 @@ Many Windows applications hardcode their storage paths to the system drive and o
 **Windows Junction Manager** solves this transparently. It allows you to relocate heavy directories to a secondary drive (e.g. `D:`, `E:`) and establishes native **NTFS directory junctions**. Windows and all your applications continue accessing their original paths with zero performance overhead, completely unaware that the physical files reside on another drive.
 
 Unlike clumsy command-line tools or legacy utilities, Windows Junction Manager provides an intuitive, high-speed WPF interface with integrated data migration, background auto-repair, and deletion protection.
+
+---
+
+## Screenshots
+
+<p align="center">
+  <img src="assets/screenshots/main_window.png" alt="Windows Junction Manager Main Window" width="880" />
+  <br>
+  <em><strong>Main Dashboard:</strong> Tracked directory junctions with real-time health status, inline action pills (stealth, delete lock, repair, open, untrack, remove), instant search filter, and summary counters.</em>
+</p>
+
+<br>
+
+<p align="center">
+  <img src="assets/screenshots/new_junction.png" alt="Create New Junction Dialog" width="430" />
+  &nbsp;&nbsp;
+  <img src="assets/screenshots/scan_junctions.png" alt="Scan for Existing Junctions Dialog" width="430" />
+</p>
+
+<p align="center">
+  <em><strong>Left:</strong> Create a new junction with automatic Robocopy data migration, background auto-repair, stealth mode, and deletion protection.<br>
+  <strong>Right:</strong> Discover existing junctions with path presets, recursive scan, and Windows legacy junction filtering.</em>
+</p>
 
 ---
 
@@ -123,6 +148,34 @@ All your junction entries and settings are stored locally in an INI file:
 %LocalAppData%\JunctionManager\junctions.ini
 ```
 Settings are preserved across application updates and portable moves.
+
+---
+
+## Automated Releases & Build Script
+
+### Why Isn't GitHub Releases Auto-Linked to the `dist` Folder?
+- **Git Files vs. GitHub Releases**: In Git, `dist/` is just a local folder on your disk. GitHub does **not** automatically link or copy repository folders into the GitHub **Releases** section.
+- **Dedicated Asset Hosting**: GitHub Releases is an independent service on GitHub designed to host downloadable binary assets without bloating repository git history. Releases are created via **Git Tags** (e.g. `v2.1.0`) or the **GitHub Releases API**.
+
+### 🛠️ One-Click Release Builder (`build-release.bat`)
+We include a dedicated release automation script (`build-release.bat` for Windows and `build-release.sh` for Bash/WSL):
+
+```cmd
+build-release.bat
+```
+*(You can also pass a version directly: `build-release.bat 2.1.0`)*
+
+**What the script does automatically:**
+1. **Version Detection & Bumping**: Reads `<Version>` from `JunctionManager.csproj` or accepts your new version and automatically updates both `.csproj` and `AboutWindow.xaml`.
+2. **Native Single-File Compilation**: Publishes an optimized x64 native single-file Windows executable into `dist/`.
+3. **Appends Version to Executable**: Generates both:
+   - `dist\JunctionManager.exe` (standard name)
+   - `dist\JunctionManager-v<version>-win-x64.exe` (version appended)
+4. **Automated GitHub Release Creation**:
+   - Prompts to commit changes, create the git tag `v<version>`, and push it to GitHub origin.
+   - The included **GitHub Actions workflow** (`.github/workflows/release.yml`) immediately detects the new tag, builds the project on GitHub's cloud runners, and automatically publishes the release with downloadable executables at:
+     `https://github.com/binodkhandual/Windows-Junction-Manager/releases`
+   - If the [GitHub CLI (`gh`)](https://cli.github.com/) is installed locally, it can also create the GitHub release directly from your terminal.
 
 ---
 
@@ -266,5 +319,6 @@ Distributed under the **MIT License**. See `LICENSE` for more information.
 
 ## Author & Acknowledgments
 
-- **Author**: biN32 ([Binod Khandual](https://github.com/binodkhandual))
+- **Author**: ([Binod Khandual](https://github.com/binodkhandual))
+- Thanks to biN32 for inspiring this project.
 - Built with modern C# and .NET 8 WPF.
